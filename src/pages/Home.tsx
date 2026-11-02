@@ -117,9 +117,9 @@ const footerInfoContent = {
   },
 };
 
-function Field({ label, htmlFor, error, children }: { label: string; htmlFor: string; error?: string; children: ReactNode }) {
+function Field({ label, htmlFor, error, className = "", children }: { label: string; htmlFor: string; error?: string; className?: string; children: ReactNode }) {
   return (
-    <div className="field">
+    <div className={`field ${className}`.trim()}>
       <label htmlFor={htmlFor}>{label}</label>
       {children}
       {error ? <p className="field-error" id={`${htmlFor}-error`}>{error}</p> : null}
@@ -150,6 +150,8 @@ export default function Home() {
   const [footerInfo, setFooterInfo] = useState<keyof typeof footerInfoContent | null>(null);
   const [profileId] = useState(() => new URLSearchParams(window.location.search).get("profil"));
   const chatLogRef = useRef<HTMLDivElement>(null);
+  const voicePanelRef = useRef<HTMLElement>(null);
+  const scrollToDemoAfterSaveRef = useRef(false);
   const signupDialogRef = useRef<HTMLDialogElement>(null);
   const footerInfoDialogRef = useRef<HTMLDialogElement>(null);
 
@@ -170,6 +172,7 @@ export default function Home() {
       const url = new URL(window.location.href);
       url.searchParams.set("profil", profile.publicId);
       window.history.replaceState({}, "", url);
+      scrollToDemoAfterSaveRef.current = true;
     },
   });
 
@@ -185,6 +188,21 @@ export default function Home() {
     setForm(next);
     setSavedProfile(next);
   }, [profileQuery.data]);
+
+  useEffect(() => {
+    if (!savedProfile || !scrollToDemoAfterSaveRef.current) return;
+    scrollToDemoAfterSaveRef.current = false;
+    if (!window.matchMedia("(max-width: 959px)").matches) return;
+
+    const timer = window.setTimeout(() => {
+      voicePanelRef.current?.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }, 100);
+
+    return () => window.clearTimeout(timer);
+  }, [savedProfile, reduceMotion]);
 
   useEffect(() => {
     if (!chatLogRef.current) return;
@@ -471,24 +489,24 @@ export default function Home() {
                 </div>
 
                 <div className="form-grid">
-                  <Field label="Företagsnamn" htmlFor="companyName" error={errors.companyName}>
+                  <Field className="field-span-full" label="Företagsnamn" htmlFor="companyName" error={errors.companyName}>
                     <input id="companyName" value={form.companyName} onChange={(e) => update("companyName", e.target.value)} aria-describedby={errors.companyName ? "companyName-error" : undefined} aria-invalid={Boolean(errors.companyName)} autoComplete="organization" placeholder="Till exempel Lindqvists Rör" />
                   </Field>
                   <Field label="Förnamn" htmlFor="contactName" error={errors.contactName}>
                     <input id="contactName" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} aria-describedby={errors.contactName ? "contactName-error" : undefined} aria-invalid={Boolean(errors.contactName)} autoComplete="given-name" placeholder="Erik" />
-                  </Field>
-                  <Field label="Bransch" htmlFor="industry" error={errors.industry}>
-                    <select id="industry" value={form.industry} onChange={(e) => update("industry", e.target.value)} aria-describedby={errors.industry ? "industry-error" : "industry-help"} aria-invalid={Boolean(errors.industry)}>
-                      <option value="" disabled>Välj bransch</option>
-                      {industryRegister.map((entry) => <option key={entry.name} value={entry.name}>{entry.name}</option>)}
-                    </select>
-                    {!errors.industry ? <p className="field-help" id="industry-help">Tjänster fylls i automatiskt.</p> : null}
                   </Field>
                   <Field label="Ort" htmlFor="serviceArea" error={errors.serviceArea}>
                     <select id="serviceArea" value={form.serviceArea} onChange={(e) => update("serviceArea", e.target.value)} aria-describedby={errors.serviceArea ? "serviceArea-error" : undefined} aria-invalid={Boolean(errors.serviceArea)}>
                       <option value="" disabled>Välj län</option>
                       {swedishCounties.map((county) => <option key={county} value={county}>{county}</option>)}
                     </select>
+                  </Field>
+                  <Field className="field-span-full" label="Bransch" htmlFor="industry" error={errors.industry}>
+                    <select id="industry" value={form.industry} onChange={(e) => update("industry", e.target.value)} aria-describedby={errors.industry ? "industry-error" : "industry-help"} aria-invalid={Boolean(errors.industry)}>
+                      <option value="" disabled>Välj bransch</option>
+                      {industryRegister.map((entry) => <option key={entry.name} value={entry.name}>{entry.name}</option>)}
+                    </select>
+                    {!errors.industry ? <p className="field-help" id="industry-help">Tjänster fylls i automatiskt.</p> : null}
                   </Field>
                 </div>
 
@@ -513,7 +531,7 @@ export default function Home() {
               </form>
             )}
 
-            <aside className="voice-panel" aria-label="Röst- eller chattest med Hjälpa">
+            <aside ref={voicePanelRef} className="voice-panel" aria-label="Röst- eller chattest med Hjälpa">
               <div className="demo-mode-toggle" role="group" aria-label="Välj demoläge">
                 <button type="button" aria-pressed={demoMode === "voice"} onClick={() => changeDemoMode("voice")}>
                   <Microphone size={17} weight={demoMode === "voice" ? "fill" : "regular"} /> Röst

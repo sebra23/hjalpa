@@ -493,7 +493,7 @@ export default function Home() {
                     <input id="companyName" value={form.companyName} onChange={(e) => update("companyName", e.target.value)} aria-describedby={errors.companyName ? "companyName-error" : undefined} aria-invalid={Boolean(errors.companyName)} autoComplete="organization" placeholder="Till exempel Lindqvists Rör" />
                   </Field>
                   <Field label="Förnamn" htmlFor="contactName" error={errors.contactName}>
-                    <input id="contactName" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} aria-describedby={errors.contactName ? "contactName-error" : undefined} aria-invalid={Boolean(errors.contactName)} autoComplete="givenName" placeholder="Erik" />
+                    <input id="contactName" value={form.contactName} onChange={(e) => update("contactName", e.target.value)} aria-describedby={errors.contactName ? "contactName-error" : undefined} aria-invalid={Boolean(errors.contactName)} autoComplete="given-name" placeholder="Erik" />
                   </Field>
                   <Field label="Ort" htmlFor="serviceArea" error={errors.serviceArea}>
                     <select id="serviceArea" value={form.serviceArea} onChange={(e) => update("serviceArea", e.target.value)} aria-describedby={errors.serviceArea ? "serviceArea-error" : undefined} aria-invalid={Boolean(errors.serviceArea)}>
@@ -663,7 +663,7 @@ export default function Home() {
               <span className="process-number">03</span>
               <h3>Tar jobbet vidare</h3>
               <p>Hjälpa hanterar samtalet och gör det som behövs.</p>
-              <div className="process-visual process-task-list" aria-hidden="true">
+              <div className="process-visual process-task-list">
                 <div><CalendarCheck size={22} /><span>Bokar i kalendern</span></div>
                 <div><ChatCircle size={22} /><span>Ställer följdfrågor</span></div>
                 <div><FileText size={22} /><span>Förbereder offert</span></div>
@@ -674,7 +674,7 @@ export default function Home() {
               <span className="process-number">04</span>
               <h3>Ni får allt direkt</h3>
               <p>Som SMS, WhatsApp, mejl eller till ert CRM.</p>
-              <div className="process-visual process-channel-grid" aria-hidden="true">
+              <div className="process-visual process-channel-grid">
                 <div><ChatCircle size={24} /><span>SMS</span></div>
                 <div><WhatsappLogo size={24} /><span>WhatsApp</span></div>
                 <div><EnvelopeSimple size={24} /><span>Mejl</span></div>
@@ -764,7 +764,7 @@ export default function Home() {
             <div className="background-artifact-heading"><span>Offertunderlag</span><FileText size={17} /></div>
             <strong>Redo för granskning</strong>
             <p>Kunduppgifter och arbetsomfattning har samlats in från samtalet.</p>
-            <div className="background-artifact-lines" aria-hidden="true"><span /><span /><span /></div>
+            <div className="background-artifact-lines"><span /><span /><span /></div>
           </div>
           <div className="conversation-thread thread-faq" aria-hidden="true">
             <span /><i /><span /><i /><span className="thread-node-active" />

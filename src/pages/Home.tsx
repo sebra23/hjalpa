@@ -38,6 +38,7 @@ import {
 import type { ChatMessage } from "@contracts/chat";
 import { trpc } from "@/providers/trpc";
 import { buildMillisEmbedUrl, millisAgentPrompt } from "@/lib/millis";
+import PrivateHome from "@/pages/PrivateHome";
 
 type FormErrors = Partial<Record<keyof CompanyInput, string>>;
 type SavedProfile = CompanyInput & { publicId: string };
@@ -368,6 +369,17 @@ export default function Home() {
   const isRestoring = Boolean(profileId) && profileQuery.isLoading;
   const signupProfile = savedProfile ?? form;
 
+  if (audience === "private") {
+    return (
+      <PrivateHome
+        onSelectCompany={() => {
+          setAudience("company");
+          window.scrollTo({ top: 0, behavior: "auto" });
+        }}
+      />
+    );
+  }
+
   return (
     <div className="site-shell" id="top">
       <header className="site-header">
@@ -379,7 +391,7 @@ export default function Home() {
           </nav>
           <div className="audience-toggle" role="group" aria-label="Välj målgrupp">
             <button type="button" aria-pressed={audience === "company"} onClick={() => setAudience("company")}>Företag</button>
-            <button type="button" aria-pressed={audience === "private"} onClick={() => setAudience("private")}>Privatperson</button>
+            <button type="button" aria-pressed="false" onClick={() => setAudience("private")}>Privatperson</button>
           </div>
         </div>
       </header>
@@ -663,7 +675,7 @@ export default function Home() {
               <span className="process-number">03</span>
               <h3>Tar jobbet vidare</h3>
               <p>Hjälpa hanterar samtalet och gör det som behövs.</p>
-              <div className="process-visual process-task-list">
+              <div className="process-visual process-task-list" aria-hidden="true">
                 <div><CalendarCheck size={22} /><span>Bokar i kalendern</span></div>
                 <div><ChatCircle size={22} /><span>Ställer följdfrågor</span></div>
                 <div><FileText size={22} /><span>Förbereder offert</span></div>
@@ -674,7 +686,7 @@ export default function Home() {
               <span className="process-number">04</span>
               <h3>Ni får allt direkt</h3>
               <p>Som SMS, WhatsApp, mejl eller till ert CRM.</p>
-              <div className="process-visual process-channel-grid">
+              <div className="process-visual process-channel-grid" aria-hidden="true">
                 <div><ChatCircle size={24} /><span>SMS</span></div>
                 <div><WhatsappLogo size={24} /><span>WhatsApp</span></div>
                 <div><EnvelopeSimple size={24} /><span>Mejl</span></div>

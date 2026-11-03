@@ -675,7 +675,7 @@ export default function Home() {
               <span className="process-number">03</span>
               <h3>Tar jobbet vidare</h3>
               <p>Hjälpa hanterar samtalet och gör det som behövs.</p>
-              <div className="process-visual process-task-list" aria-hidden="true">
+              <div className="process-visual process-task-list">
                 <div><CalendarCheck size={22} /><span>Bokar i kalendern</span></div>
                 <div><ChatCircle size={22} /><span>Ställer följdfrågor</span></div>
                 <div><FileText size={22} /><span>Förbereder offert</span></div>
@@ -686,7 +686,7 @@ export default function Home() {
               <span className="process-number">04</span>
               <h3>Ni får allt direkt</h3>
               <p>Som SMS, WhatsApp, mejl eller till ert CRM.</p>
-              <div className="process-visual process-channel-grid" aria-hidden="true">
+              <div className="process-visual process-channel-grid">
                 <div><ChatCircle size={24} /><span>SMS</span></div>
                 <div><WhatsappLogo size={24} /><span>WhatsApp</span></div>
                 <div><EnvelopeSimple size={24} /><span>Mejl</span></div>
